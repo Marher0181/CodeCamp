@@ -45,7 +45,7 @@ router.put('/modificar/:idRol', authenticateAndAuthorize(4), async (req, res) =>
 router.get('/obtener', authenticateAndAuthorize(4), async (req, res) => {
   try {
     const result = await sequelize.query(
-      'SELECT * FROM Rol'
+      'SELECT idRol, nombre FROM Rol'
     );
     res.status(201).json({ message: 'Roles obtenidos', result });
   } catch (error) {

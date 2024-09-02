@@ -36,7 +36,7 @@ router.post('/login', async (req, res) => {
 
   try {
       const user = await sequelize.query(
-          'SELECT * FROM usuarios WHERE correoElectronico = :correoElectronico',
+          'SELECT rolId, estadosId, correoElectronico, nombreCompleto, password, telefono, fechaNacimiento FROM usuarios WHERE correoElectronico = :correoElectronico',
           {
               replacements: { correoElectronico },
               type: sequelize.QueryTypes.SELECT
@@ -90,7 +90,7 @@ router.get('/obtener', authenticateAndAuthorize(4), async (req, res) => {
 
   try {
     const result = await sequelize.query(
-      'SELECT * FROM Usuarios'
+      'SELECT rolId, estadosId, correoElectronico, nombreCompleto, password, telefono, fechaNacimiento FROM usuarios FROM Usuarios'
     );
 
     res.status(201).json({ message: 'Usuarios obtenidos', result });

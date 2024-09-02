@@ -45,7 +45,7 @@ router.get('/obtener', authenticateAndAuthorize(5), async (req, res) => {
   try {
 
     const result = await sequelize.query(
-        'SELECT * FROM estados',
+        'SELECT idEstados, nombre FROM estados',
     );
     res.status(201).json({ message: 'Estados obtenidos correctamente', result });
 } catch (error) {
