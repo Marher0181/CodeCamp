@@ -1,11 +1,10 @@
 const jwt = require('jsonwebtoken');
-const SECRET_KEY = 'codecamp_secret'// Asegúrate de tener SECRET_KEY en tu .env
+const SECRET_KEY = 'codecamp_secret';
 
-
-const authenticateAndAuthorize = (requiredRole) => {
+const authenticateAndAuthorize = (requiredRoleId) => {
   return (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; 
+    const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
       return res.status(401).json({ message: 'Token no proporcionado' });
@@ -13,10 +12,10 @@ const authenticateAndAuthorize = (requiredRole) => {
 
     jwt.verify(token, SECRET_KEY, (err, decoded) => {
       if (err) {
-        return res.status(403).json({ message: 'Token inválido' });
+        return res.status(403).json({ message: 'Token inválido o expirado' });
       }
 
-      if (decoded.rolId !== requiredRole) {
+      if (decoded.rolId !== requiredRoleId) {
         return res.status(403).json({ message: 'Acceso denegado. Rol insuficiente.' });
       }
 

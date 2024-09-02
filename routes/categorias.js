@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const sequelize = require('../db/db');
-const Categoria = require('../models/categoria');
+const Categoria = require('../models/Categoria');
 const authenticateAndAuthorize = require('../middlewares/authMiddleware');
 
 
@@ -44,11 +44,11 @@ router.put('/modificar/:idCategoria', authenticateAndAuthorize(4), async (req, r
     });
 
 
-router.get('/obtener', async (req, res) => {
+router.get('/obtener',  authenticateAndAuthorize(5), async (req, res) => {
   try {
 
     const result = await sequelize.query(
-        'SELECT * FROM Categoria',
+        'SELECT nombre, estadoId FROM Categoria',
     );
     res.status(201).json({ message: 'Categorias obtenidos correctamente', result });
 } catch (error) {

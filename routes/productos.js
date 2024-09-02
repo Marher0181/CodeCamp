@@ -41,7 +41,7 @@ router.put('/modificar/:idProductos', authenticateAndAuthorize(4), async (req, r
     }
 });
 
-router.get('/obtener', async (req, res) => {  
+router.get('/obtener', authenticateAndAuthorize(5), async (req, res) => {  
     try {
 
         const result = await sequelize.query(

@@ -4,6 +4,8 @@ const sequelize = require('../db/db');
 const bcrypt = require('bcryptjs');
 const authenticateAndAuthorize = require('../middlewares/authMiddleware');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = 'codecamp_secret'
 
 router.post('/register', async (req, res) => {
   const { rolId, estadosId, nombreCompleto, correoElectronico, password, telefono, fechaNacimiento } = req.body;
@@ -25,7 +27,9 @@ router.post('/register', async (req, res) => {
       res.status(500).json({ message: 'Error al registrar el usuario', error: error.message });
   }
 });
-
+/*
+TODOS LOS DEMÁS DEBEN LLEVAR VALIDACION (CLIENTE)  excepto Registro y Login
+*/
 
 router.post('/login', async (req, res) => {
   const { correoElectronico, password } = req.body;
@@ -42,9 +46,8 @@ router.post('/login', async (req, res) => {
       if (user.length === 0) {
           return res.status(404).json({ message: 'Usuario no encontrado' });
       }
-
+      console.log(user);
       const validPassword = await bcrypt.compare(password, user[0].password);
-
       if (!validPassword) {
           return res.status(401).json({ message: 'Contraseña incorrecta' });
       }
@@ -63,7 +66,7 @@ router.post('/login', async (req, res) => {
 });
 
 
-router.put('/modificar', async (req, res) => {
+router.put('/modificar', authenticateAndAuthorize(5), async (req, res) => {
   try {
       const { idUsuarios, rolId, estadosId, correoElectronico, nombreCompleto, password, telefono, fechaNacimiento } = req.body;
 

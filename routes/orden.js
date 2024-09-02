@@ -4,27 +4,11 @@ const router = express.Router();
 const Orden = require('../models/Orden');
 const sequelize = require('../db/db');
 const authenticateAndAuthorize = require('../middlewares/authMiddleware');
+/*
+EL QUE ESTÁ BIEN ES ORDEN DETALEL
+*/ 
 
-router.post('/insertar', async (req, res) => {
-    const { usuariosId, estadoId, nombreCompleto, direccion, telefono,correoElectronico, fechaEntrega, totalOrden} = req.body;
-    try {
-        const result = await sequelize.query(
-          'EXEC sp_InsertarOrden @usuariosId = :usuariosId, @estadoId=:estadoId, @nombreCompleto = :nombreCompleto, @direccion = :direccion, @telefono = :telefono, @correoElectronico = :correoElectronico, @fechaEntrega = :fechaEntrega, @totalOrden = :totalOrden',
-          {
-            replacements: { usuariosId, estadoId, nombreCompleto, direccion, telefono, correoElectronico, fechaEntrega, totalOrden},
-            type: sequelize.QueryTypes.RAW
-          }
-        );
-    
-        res.status(201).json({ message: 'Orden creado correctamente', result });
-      } catch (error) {
-        res.status(400).json({ error: error.message });
-      }
-    });
-
-// routes/orden.js
-
-router.post('/crearCompletada', async (req, res) => {
+router.put('/crearCompletada', authenticateAndAuthorize(4), async (req, res) => {
 
     const { usuariosId, estadoId, nombreCompleto, direccion, telefono,correoElectronico, fechaEntrega, totalOrden} = req.body;
     try {
