@@ -8,9 +8,15 @@ const categoriaRoutes = require('./routes/categorias');
 const ordenRoutes = require('./routes/orden');
 const ordenDetalleRoutes = require('./routes/ordendetalle');
 const sequelize = require('./db/db');
+const cors = require('cors')
+
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
 
 app.use(bodyParser.json());
 
@@ -21,6 +27,7 @@ app.use('/api/roles', rolesRoutes);
 app.use('/api/categoria', categoriaRoutes)
 app.use('/api/orden', ordenRoutes); 
 app.use('/api/ordenDetalle', ordenDetalleRoutes);
+
 
 sequelize.sync({ force: false })
   .then(() => {

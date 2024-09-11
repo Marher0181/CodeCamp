@@ -45,7 +45,7 @@ router.get('/obtener', authenticateAndAuthorize(5), async (req, res) => {
     try {
 
         const result = await sequelize.query(
-            'SELECT categoriaProductos, usuarios, nombre, marca, codigo, stock, estado, precio, foto FROM productos where estado = 4 ',
+            'SELECT idProductos, categoriaProductos, usuarios, nombre, marca, codigo, stock, estado, precio, foto FROM productos where estado = 4 ',
             //El 4 significa "ACTIVO" para realizar eliminados lógicos
         );
         res.status(201).json({ message: 'Productos obtenidos correctamente', result });

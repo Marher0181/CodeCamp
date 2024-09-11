@@ -3,7 +3,7 @@ const sequelize = require('../db/db');
 const Orden = require('./Orden');
 const Producto = require('./Producto');
 
-const OrdenDetalle = sequelize.define('OrdenDetalle', {
+const OrdenDetalle = sequelize.define('OrdenDetalles', {
   idOrdenDetalle: {
     type: DataTypes.INTEGER,
     primaryKey: true,

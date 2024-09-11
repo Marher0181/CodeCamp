@@ -36,7 +36,7 @@ router.post('/login', async (req, res) => {
 
   try {
       const user = await sequelize.query(
-          'SELECT rolId, estadosId, correoElectronico, nombreCompleto, password, telefono, fechaNacimiento FROM usuarios WHERE correoElectronico = :correoElectronico',
+          'SELECT idUsuarios, rolId, estadosId, correoElectronico, nombreCompleto, password, telefono, fechaNacimiento FROM usuarios WHERE correoElectronico = :correoElectronico',
           {
               replacements: { correoElectronico },
               type: sequelize.QueryTypes.SELECT
@@ -53,7 +53,7 @@ router.post('/login', async (req, res) => {
       }
 
       const token = jwt.sign(
-        { id: user[0].idUsuarios, correoElectronico: user[0].correoElectronico, rolId: user[0].rolId },
+        { idUsuarios: user[0].idUsuarios, correoElectronico: user[0].correoElectronico, rolId: user[0].rolId },
         SECRET_KEY,
         { expiresIn: '24h' }
       ); 
