@@ -30,7 +30,7 @@ router.put('/modificar/:idCategoria', authenticateAndAuthorize(4), async (req, r
 
     try {
         const result = await sequelize.query(
-          'EXEC sp_InsertarCategoria @idCategoria = :idCategoria, @usuarioId = :usuarioId, @nombre = :nombre, @estadoId = :estadoId',
+          'EXEC sp_ModificarCategoria @idCategoria = :idCategoria, @usuarioId = :usuarioId, @nombre = :nombre, @estadoId = :estadoId',
           {
             replacements: { idCategoria, usuarioId, nombre, estadoId  },
             type: sequelize.QueryTypes.RAW
@@ -43,19 +43,45 @@ router.put('/modificar/:idCategoria', authenticateAndAuthorize(4), async (req, r
       }
     });
 
+    router.put('/eliminar/:idCategoria', authenticateAndAuthorize(4), async (req, res) => {
+      const { idCategoria } = req.params;
+  
+  
+      try {
+          const result = await sequelize.query(
+            'EXEC sp_EliminarCategoria @idCategoria = :idCategoria',
+            {
+              replacements: { idCategoria},
+              type: sequelize.QueryTypes.RAW
+            }
+          );
+      
+          res.status(201).json({ message: 'Categoria modificada correctamente', result });
+        } catch (error) {
+          res.status(400).json({ error: error.message });
+        }
+      });
 
-router.get('/obtener',  authenticateAndAuthorize(5), async (req, res) => {
-  try {
 
-    const result = await sequelize.query(
-        'SELECT nombre, estadoId FROM Categoria',
-    );
-    res.status(201).json({ message: 'Categorias obtenidos correctamente', result });
-} catch (error) {
-    console.error('Error al obtener las Categorias:', error);
-    res.status(500).json({ message: 'Error al obtener la Categorias', error: error.message });
-}
-});
+    router.get('/obtener', authenticateAndAuthorize(4), async (req, res) => {
+      try {
+        // Utilizando Sequelize Model para la consulta
+        const categories = await sequelize.query(
+          'SELECT nombre, idCategoria, estadoId FROM Categoria WHERE estadoId != 5',
+          {
+            type: sequelize.QueryTypes.SELECT // Esto garantiza que se devuelvan los resultados como objetos
+          }
+        );
+        if(categories.length < 0 ) {
+          res.status(202).json({ message: 'No hay categorias para mostrar'})
+        }
+        res.status(200).json({ categories });
+      } catch (error) {
+        console.error('Error al obtener las Categorías:', error);
+        res.status(500).json({ message: 'Error al obtener las Categorías', error: error.message });
+      }
+    });
+    
 
 
 module.exports = router;
